@@ -12,7 +12,7 @@ function RegisterForm() {
         const response = await api.post("/auth/register",
             {
                 email: email,
-                passowrd: password,
+                password: password,
                 confirm_password: confirmPassword
             }
         )
@@ -23,15 +23,15 @@ function RegisterForm() {
         onSubmit={registerUser}>
             <input className="p-2 m-1 rounded border"
             value={email} placeholder="email" 
-            onClick={(e) => {setEmail(e.target.value)}}></input>
+            onChange={e => {setEmail(e.target.value)}}></input>
             <input className="p-2 m-1 rounded border"
             value={password} placeholder="password" 
-            onClick={(e) => {setPassword(e.target.value)}}></input>
+            onChange={e => {setPassword(e.target.value)}}></input>
             <input className="p-2 m-1 rounded border"
             value={confirmPassword} placeholder="confirm password" 
-            onClick={(e) => {setConfirmPassword(e.target.value)}}></input>
-            <buttton className="p-2 m-1 rounded border"
-            type="submit" > Register </buttton>
+            onChange={e => {setConfirmPassword(e.target.value)}}></input>
+            <button className="p-2 m-1 rounded border"
+            type="submit" > Register </button>
         </form>
     );
 }
