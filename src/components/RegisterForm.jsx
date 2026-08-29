@@ -16,6 +16,9 @@ function RegisterForm() {
                 confirm_password: confirmPassword
             }
         )
+        setEmail("")
+        setPassword("")
+        setConfirmPassword("")
     }
 
     return (
