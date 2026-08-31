@@ -1,10 +1,14 @@
 import { useState } from "react";
-import api from '../api/axios.jsx';
+import { useNavigate } from 'react-router-dom';
+import { Link } from "react-router-dom";
+import api from '../api/axios.jsx'
 
 function RegisterForm() {
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
     const [confirmPassword, setConfirmPassword] = useState("")
+
+    let navigate = useNavigate();
 
 
     const registerUser = async (e) => {
@@ -19,10 +23,13 @@ function RegisterForm() {
         setEmail("")
         setPassword("")
         setConfirmPassword("")
+
+        navigate("/login")
     }
 
     return (
-        <form className="flex flex-col items-center justify-center min-h-screen"
+        <div  className="flex flex-col items-center justify-center min-h-screen">
+        <form className="flex flex-col items-center"
         onSubmit={registerUser}>
             <input className="p-2 m-1 rounded border"
             value={email} placeholder="email" 
@@ -36,6 +43,10 @@ function RegisterForm() {
             <button className="p-2 m-1 rounded border"
             type="submit" > Register </button>
         </form>
+        <p>
+            Already have an account? Login <Link className="text-indigo-600" to="/login">Here</Link>
+        </p>
+        </div>
     );
 }
 
