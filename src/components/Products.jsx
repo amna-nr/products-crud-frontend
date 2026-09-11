@@ -1,6 +1,7 @@
 import api from "../api/axios";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import Navbar from "./Navbar";
 
 function Products () {
     const [products, setProducts] = useState([]);
@@ -16,6 +17,12 @@ function Products () {
     }, []);
     
     return (
+        <>
+        <Navbar />
+        <button className="flex mx-auto text-3xl bg-gray-200 text-gray-600 rounded border-gray px-32"
+        onClick={() => {navigate("/products/create")}}>
+            +
+        </button>
         <div className="grid grid-cols-3 gap-4">
         {products.map((product) => (
         <div key={product.id} product={product}
@@ -31,6 +38,7 @@ function Products () {
         </div>
       ))}
     </div>
+    </>
     )
 }
 

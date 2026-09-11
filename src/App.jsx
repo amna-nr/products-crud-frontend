@@ -3,6 +3,7 @@ import RegisterForm from './components/RegisterForm';
 import LoginForm from './components/LoginForm';
 import Products from './components/Products';
 import Product from './components/Product';
+import ProductCreate from './components/ProductCreate';
 import Home from './pages/Home';
 
 
@@ -15,6 +16,7 @@ function App() {
       <Route path="/" element={<Home />} />
       <Route path="/products" element={<Products />} />
       <Route path="/products/:id" element={<Product />} />
+      <Route path="/products/create" element={<ProductCreate />} />
     </Routes>
   </BrowserRouter>
   );
