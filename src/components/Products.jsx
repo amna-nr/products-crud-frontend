@@ -25,7 +25,7 @@ function Products () {
             <p>{product.name}</p>
             <p>{product.price}</p>
             <p>in stock: {product.quantity}</p>
-            <button className="rounded border p-2">
+            <button className="rounded border bg-green-200 p-2">
                 Add to cart
             </button>
         </div>
