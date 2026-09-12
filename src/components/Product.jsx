@@ -50,7 +50,7 @@ function Product() {
 
     return(
         <div className="flex justify-center items-center min-h-screen">
-            <div className="flex flex-col justify-center items-end rounded border p-2" key={product.id}>
+            <div className="flex flex-col justify-center items-end bg-slate-300 rounded border border-0 p-2" key={product.id}>
 
                 {!isOpenDialog &&
                     <div className="relative">
@@ -91,11 +91,11 @@ function Product() {
                             Delete {product.name} from products? 
                         </p>
                         <div className="flex justify-center">
-                            <button className="bg-blue-200 rounded border p-1 m-1"
+                            <button className="bg-blue-200 rounded border p-2 m-1"
                             onClick={() => {setIsOpenDialog(!isOpenDialog)}}>
                                 Cancel 
                             </button>
-                            <button className="bg-red-400 rounded border p-1 m-1"
+                            <button className="bg-red-400 rounded border p-2 m-1"
                             onClick={deleteProduct}> 
                                 Okay 
                             </button>
@@ -112,7 +112,7 @@ function Product() {
                             <p>{product.name}</p>
                             <p>{product.price}</p>
                             <p>{product.quantity}</p>
-                            <button className="rounded border p-2 bg-blue-200 mt-2"> Add to cart</button>
+                            <button className="rounded border border-0 text-white p-3 bg-blue-950 mt-4"> Add to cart</button>
                         </div>
                     ):
                     (   
@@ -122,13 +122,13 @@ function Product() {
                             setIsOpenDialog(false)
                         }}
                         onSubmit={updateProduct}>
-                            <input className="rounded border p-2 m-1"
+                            <input className="rounded border border-0 p-2 m-1 bg-white"
                             value={name} onChange={(e) => {setName(e.target.value)}}/>
-                            <input className="rounded border p-2 m-1"
+                            <input className="rounded border border-0 p-2 m-1 bg-white"
                             value={price} onChange={(e) => {setPrice(e.target.value)}} />
-                            <input className="rounded border p-2 m-1"
+                            <input className="rounded border border-0 p-2 m-1 bg-white"
                             value={quantity} onChange={(e) => {setQuantity(e.target.value)}} />
-                            <button className="rounded border bg-blue-200 p-2 mt-2" type="submit">
+                            <button className="rounded border bg-blue-950 text-white p-3 px-4 mt-2" type="submit">
                                 Save
                             </button>
                         </form>

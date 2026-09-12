@@ -26,7 +26,7 @@ function Products () {
         <div className="grid grid-cols-3 gap-12 m-2 mx-8">
         {products.map((product) => (
         <div key={product.id} product={product}
-             className="flex flex-col items-center bg-slate-300 rounded-lg m-4 p-4"
+             className="flex flex-col items-center bg-slate-300 shadow-lg rounded-lg m-4 p-4"
              onClick={() => {navigate(`${product.id}`)}}
         >
             <p>{product.name}</p>
