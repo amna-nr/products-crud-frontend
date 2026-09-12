@@ -12,8 +12,9 @@ function Navbar (){
     }
 
     return (
-        <nav className="flex justify-end p-2 pr-4">
-            <button onClick={logoutUser}
+        <nav className="flex justify-end p-2 pr-4 bg-blue-950">
+            <button className="text-white p-2"
+            onClick={logoutUser}
             type="submit">Logout</button>
         </nav>
     )

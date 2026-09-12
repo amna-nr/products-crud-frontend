@@ -21,7 +21,7 @@ function LoginForm() {
         setEmail("")
         setPassword("")
 
-        navigate("/")
+        navigate("/products")
 
     }
 

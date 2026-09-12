@@ -27,7 +27,7 @@ function ProductCreate() {
         <div className="flex justify-center items-center min-h-screen">
         <form className="flex flex-col rounded border p-2">
             <div className="flex justify-end">
-                <button className="rounded border bg-red-400 p-2 py-1 m-1"
+                <button className="rounded border bg-red-400 p-3 py-1 m-1"
                 onClick={() => {navigate("/products")}}> 
                     X 
                 </button>
@@ -38,7 +38,7 @@ function ProductCreate() {
             placeholder="price" value={price} onChange={(e) => {setPrice(e.target.value)}}></input>
             <input className="rounded border p-2 m-1"
             placeholder="quantity" value={quantity} onChange={(e) => {setQuantity(e.target.value)}}></input>
-            <button className="rounded border bg-green-200 p-2 px-4 m-1 mx-auto"
+            <button className="rounded border bg-blue-200 p-2 px-4 m-2 mx-auto"
             type="submit" onClick={createProduct}> 
             Save 
             </button>
