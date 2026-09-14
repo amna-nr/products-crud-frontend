@@ -5,14 +5,9 @@ import api from "../api/axios";
 
 function Product() {
     const [product, setProduct] = useState(null);
-    const [isOpen, setIsOpen] = useState(false);
+    const [isOpenMenu, setIsOpenMenu] = useState(false);
     const [isEditing, setIsEditing] = useState(false);
-
-    const [isOpenDialog, setIsOpenDialog] = useState(false);
-
-    const [name, setName] = useState("");
-    const [price, setPrice] = useState("");
-    const [quantity, setQuantity] = useState("");
+    const [isOpenDelete, setIsOpenDelete] = useState(false);
 
     const { id } = useParams();
     let navigate = useNavigate();
@@ -34,9 +29,9 @@ function Product() {
         e.preventDefault()
         const response = await api.put(`/products/${id}`,
             {
-                name: name,
-                price: parseInt(price, 10),
-                quantity: parseInt(quantity, 10)
+                name: product.name,
+                price: parseInt(product.price, 10),
+                quantity: parseInt(product.quantity, 10)
             }
         )
         setProduct(response.data)
@@ -52,30 +47,13 @@ function Product() {
         <div className="flex justify-center items-center min-h-screen">
             <div className="flex flex-col justify-center items-end bg-slate-300 rounded border border-0 p-2" key={product.id}>
 
-                {!isOpenDialog &&
+                {!isOpenDelete &&
                     <div className="relative">
-                        {!isEditing &&
                         <button className="text-2xl p-1"
-                        onClick={() => {setIsOpen(!isOpen)}}> ⋮ </button>
-                        }
-                        {isEditing &&
-                            <button className="rounded border bg-red-400 p-3 py-1 m-1"
-                            onClick={() => {setIsEditing(false)}}> 
-                                X 
-                            </button>
-                        }
-                        {isOpen && 
+                        onClick={() => {setIsOpenMenu(!isOpenMenu)}}> ⋮ </button>
+                        {isOpenMenu && 
                             <div className="flex flex-col items-start border p-2 absolute bg-white">
-                                <button onClick={() => {
-                                    setIsEditing(true) 
-                                    setName(product.name)
-                                    setPrice(product.price)
-                                    setQuantity(product.quantity)
-                                    setIsOpen(false)
-                                }}> 
-                                    Edit 
-                                </button>
-                                <button onClick={() => {setIsOpenDialog(!isOpenDialog)}}> 
+                                <button onClick={() => {setIsOpenDelete(!isOpenDelete)}}> 
                                     Delete 
                                 </button>
                             </div>
@@ -83,7 +61,7 @@ function Product() {
                     </div>
                 }
 
-                {isOpenDialog? 
+                {isOpenDelete &&
                 (
                     <dialog open
                     className="flex flex-col rounded border p-2 gap-2 mx-auto">
@@ -92,7 +70,7 @@ function Product() {
                         </p>
                         <div className="flex justify-center">
                             <button className="bg-blue-200 rounded border p-2 m-1"
-                            onClick={() => {setIsOpenDialog(!isOpenDialog)}}>
+                            onClick={() => {setIsOpenDelete(!isOpenDelete)}}>
                                 Cancel 
                             </button>
                             <button className="bg-red-400 rounded border p-2 m-1"
@@ -101,39 +79,41 @@ function Product() {
                             </button>
                         </div>
                     </dialog>
-                ):
-                    (!isEditing? 
-                    (
-                        <div className="p-2"
-                        onClick={() => {
-                            setIsOpen(!isOpen)
-                            setIsOpenDialog(false)
-                        }}>
-                            <p>{product.name}</p>
-                            <p>{product.price}</p>
-                            <p>{product.quantity}</p>
-                            <button className="rounded border border-0 text-white p-3 bg-blue-950 mt-4"> Add to cart</button>
-                        </div>
-                    ):
-                    (   
-                        <form className="flex flex-col justify-center items-center p-2"
-                        onClick={() => {
-                            setIsOpen(false)
-                            setIsOpenDialog(false)
-                        }}
-                        onSubmit={updateProduct}>
-                            <input className="rounded border border-0 p-2 m-1 bg-white"
-                            value={name} onChange={(e) => {setName(e.target.value)}}/>
-                            <input className="rounded border border-0 p-2 m-1 bg-white"
-                            value={price} onChange={(e) => {setPrice(e.target.value)}} />
-                            <input className="rounded border border-0 p-2 m-1 bg-white"
-                            value={quantity} onChange={(e) => {setQuantity(e.target.value)}} />
-                            <button className="rounded border bg-blue-950 text-white p-3 px-4 mt-2" type="submit">
-                                Save
-                            </button>
-                        </form>
-                    )
                 )}
+                    
+                <div className="flex flex-col p-2"
+                onClick={() => {
+                        setIsOpenMenu(false)
+                        setIsOpenDelete(false)
+                        setIsEditing(false)
+                    }}>
+                    <input className="focus:outline-none focus:ring-0 p-1"
+                    value={product.name} onClick={(e) => {e.stopPropagation(); setIsEditing(true);}}
+                    onChange={(e) => {setProduct({...product, name: e.target.value})}}></input>
+                    <input className="focus:outline-none focus:ring-0 p-1"
+                    value={product.price} onClick={(e) => {e.stopPropagation(); setIsEditing(true);}}
+                    onChange={(e) => {setProduct({...product, price: e.target.value})}}></input>
+                    <input className="focus:outline-none focus:ring-0 p-1"
+                    value={product.quantity} onClick={(e) => {e.stopPropagation(); setIsEditing(true);}}
+                    onChange={(e) => {setProduct({...product, quantity: e.target.value})}}></input>
+                    {isEditing&&
+                    <div className="flex justify-around">
+                        <button className="rounded border border-0 text-white p-3 bg-blue-950 mt-4"
+                        onClick={() => {setIsEditing(false)}}>
+                            Cancel
+                        </button>
+                        <button className="rounded border border-0 text-white p-3 px-4 bg-blue-950 mt-4"
+                        type="submit" onClick={updateProduct}>
+                            Save
+                        </button>
+                    </div>
+                    }     
+                    {!isEditing&& 
+                    <button className="rounded border border-0 text-white p-3 bg-blue-950 mt-4"> 
+                        Add to cart
+                    </button>
+                    }  
+                    </div>
             </div>
         </div>
     )  
