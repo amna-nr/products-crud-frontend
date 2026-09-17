@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import api from "../api/axios";
 
+import Button from "./Button";
 
 function Product() {
     const [product, setProduct] = useState(null);
@@ -98,20 +99,12 @@ function Product() {
                     onChange={(e) => {setProduct({...product, quantity: e.target.value})}}></input>
                     {isEditing&&
                     <div className="flex justify-around">
-                        <button className="rounded border border-0 text-white p-3 bg-blue-950 mt-4"
-                        onClick={() => {setIsEditing(false)}}>
-                            Cancel
-                        </button>
-                        <button className="rounded border border-0 text-white p-3 px-4 bg-blue-950 mt-4"
-                        type="submit" onClick={updateProduct}>
-                            Save
-                        </button>
+                        <Button text="Cancel" onClick={() => {setIsEditing(false)}} />
+                        <Button text="Save" onClick={updateProduct} type="submit"/>
                     </div>
                     }     
                     {!isEditing&& 
-                    <button className="rounded border border-0 text-white p-3 bg-blue-950 mt-4"> 
-                        Add to cart
-                    </button>
+                    <Button text="Add to cart" />
                     }  
                     </div>
             </div>

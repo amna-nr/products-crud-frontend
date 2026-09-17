@@ -2,6 +2,9 @@ import { useState } from "react";
 import { useNavigate } from 'react-router-dom';
 import { Link } from "react-router-dom";
 import api from '../api/axios.jsx'
+import Input from "./Input.jsx";
+import Button from "./Button.jsx";
+
 
 function RegisterForm() {
     const [email, setEmail] = useState("")
@@ -31,19 +34,12 @@ function RegisterForm() {
         <div  className="flex flex-col items-center justify-center min-h-screen">
         <form className="flex flex-col items-center"
         onSubmit={registerUser}>
-            <input className="p-2 m-1 rounded border"
-            value={email} placeholder="email" 
-            onChange={e => {setEmail(e.target.value)}}></input>
-            <input className="p-2 m-1 rounded border"
-            value={password} placeholder="password" 
-            onChange={e => {setPassword(e.target.value)}}></input>
-            <input className="p-2 m-1 rounded border"
-            value={confirmPassword} placeholder="confirm password" 
-            onChange={e => {setConfirmPassword(e.target.value)}}></input>
-            <button className="p-2 m-1 rounded border"
-            type="submit" > Register </button>
+            <Input placeholder="Email" value={email} onChange={e => {setEmail(e.target.value)}} />
+            <Input placeholder="Password" value={password} onChange={e => {setPassword(e.target.value)}} />
+            <Input placeholder="Confirm password" value={confirmPassword} onChange={e => {setConfirmPassword(e.target.value)}} />
+            <Button text="Register" type="submit" />
         </form>
-        <p>
+        <p className="p-4">
             Already have an account? Login <Link className="text-indigo-600" to="/login">Here</Link>
         </p>
         </div>

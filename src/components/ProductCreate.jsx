@@ -1,6 +1,8 @@
 import { useState } from "react";
 import api from "../api/axios";
 import { useNavigate } from "react-router-dom";
+import Input from "./Input";
+import Button from "./Button";
 
 
 function ProductCreate() {
@@ -25,22 +27,13 @@ function ProductCreate() {
 
     return (
         <div className="flex justify-center items-center min-h-screen">
-        <form className="flex flex-col rounded border border-0 bg-slate-300 pt-6 p-2">
-            <input className="focus:outline-none focus:ring-0 rounded border border-0 bg-white p-2 m-1"
-            placeholder="name" value={name} onChange={(e) => {setName(e.target.value)}}></input>
-            <input className="focus:outline-none focus:ring-0 rounded border border-0 bg-white p-2 m-1"
-            placeholder="price" value={price} onChange={(e) => {setPrice(e.target.value)}}></input>
-            <input className="focus:outline-none focus:ring-0 rounded border border-0 bg-white p-2 m-1"
-            placeholder="quantity" value={quantity} onChange={(e) => {setQuantity(e.target.value)}}></input>
+        <form className="flex flex-col rounded border border-0 bg-slate-300 pt-6 p-4 shadow-lg">
+            <Input placeholder="name" value={name} onChange={(e) => {setName(e.target.value)}} />
+            <Input placeholder="price" value={price} onChange={(e) => {setPrice(e.target.value)}} />
+            <Input placeholder="quantity" value={quantity} onChange={(e) => {setQuantity(e.target.value)}} />
             <div className="flex justify-around p-2">
-                <button className="rounded border border-0 bg-blue-950 text-white p-2 px-4 m-2 mx-auto"
-                onClick={() => navigate("/products")}> 
-                Cancel
-                </button>
-                <button className="rounded border border-0 bg-blue-950 text-white p-2 px-5 m-2 mx-auto"
-                type="submit" onClick={createProduct}> 
-                Save 
-                </button>
+                <Button text="Cancel" onClick={() => navigate("/products")} />
+                <Button text="Save" onClick={createProduct}/>
             </div>
         </form>
         </div>

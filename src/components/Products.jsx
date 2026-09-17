@@ -2,6 +2,7 @@ import api from "../api/axios";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Navbar from "./Navbar";
+import Button from "./Button";
 
 function Products () {
     const [products, setProducts] = useState([]);
@@ -32,9 +33,7 @@ function Products () {
             <p>{product.name}</p>
             <p>{product.price}</p>
             <p>in stock: {product.quantity}</p>
-            <button className="rounded border border-gray-600 bg-blue-950 text-white p-2 m-2 mt-4">
-                Add to cart
-            </button>
+            <Button text="Add to cart" />
         </div>
       ))}
     </div>
