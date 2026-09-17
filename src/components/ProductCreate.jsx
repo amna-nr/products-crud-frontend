@@ -27,10 +27,10 @@ function ProductCreate() {
 
     return (
         <div className="flex justify-center items-center min-h-screen">
-        <form className="flex flex-col rounded border border-0 bg-slate-300 pt-6 p-4 shadow-lg">
-            <Input placeholder="name" value={name} onChange={(e) => {setName(e.target.value)}} />
-            <Input placeholder="price" value={price} onChange={(e) => {setPrice(e.target.value)}} />
-            <Input placeholder="quantity" value={quantity} onChange={(e) => {setQuantity(e.target.value)}} />
+        <form className="flex flex-col">
+            <Input placeholder="Name" value={name} onChange={(e) => {setName(e.target.value)}} />
+            <Input placeholder="Price" value={price} onChange={(e) => {setPrice(e.target.value)}} />
+            <Input placeholder="Quantity" value={quantity} onChange={(e) => {setQuantity(e.target.value)}} />
             <div className="flex justify-around p-2">
                 <Button text="Cancel" onClick={() => navigate("/products")} />
                 <Button text="Save" onClick={createProduct}/>
