@@ -9,6 +9,7 @@ function Product() {
     const [isOpenMenu, setIsOpenMenu] = useState(false);
     const [isEditing, setIsEditing] = useState(false);
     const [isOpenDelete, setIsOpenDelete] = useState(false);
+    const [imageUrl, setImageUrl] = useState("");
 
     const { id } = useParams();
     let navigate = useNavigate();
@@ -18,10 +19,22 @@ function Product() {
         setProduct(response.data) 
     }
 
+    const getImage = async () => {
+        const response = await api.get(`/images/${product.name}`)
+        setImageUrl(response.data)
+    }
+
     useEffect(() => {
         getProduct();
     }, [id]);
 
+    useEffect(() => {
+        if (product)
+        {
+            getImage()
+        }
+    }, [product]);
+    
     if (!product) {
         return <p>Loading...</p>;
     }
@@ -88,6 +101,9 @@ function Product() {
                         setIsOpenDelete(false)
                         setIsEditing(false)
                     }}>
+                    {imageUrl&&
+                    <img src={imageUrl}></img>
+                    }
                     <input className="focus:outline-none focus:ring-0 p-1"
                     value={product.name} onClick={(e) => {e.stopPropagation(); setIsEditing(true);}}
                     onChange={(e) => {setProduct({...product, name: e.target.value})}}></input>
