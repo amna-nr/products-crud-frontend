@@ -2,10 +2,10 @@ import api from "../api/axios";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Navbar from "./Navbar";
-import Button from "./Button";
 
 function Products () {
     const [products, setProducts] = useState([]);
+    const [imageUrls, setImageUrls] = useState([])
     const navigate = useNavigate()
 
     async function getProducts() {
@@ -13,27 +13,41 @@ function Products () {
         setProducts(response.data);
     }
 
+    const getImageUrls = async () => {
+        const images = await Promise.all(products.map(async (product) => {
+            const response = await api.get(`/images/${product.name}`)
+            return response.data
+        }))
+    setImageUrls(images)
+    }
+
     useEffect(() => {
         getProducts();
     }, []);
-    
+
+    useEffect(() => {
+        getImageUrls();
+    }, [products])
+
     return (
-        <div className="bg-ivory">
+        <div className=" ">
         <Navbar />
         <button className="flex mx-auto text-3xl bg-gray-200 text-gray-600 rounded border  px-32 mt-6"
         onClick={() => {navigate("/products/create")}}>
             +
         </button>
-        <div className="grid grid-cols-3 gap-12 m-2 mx-8">
-        {products.map((product) => (
+        <div className="grid grid-cols-4 gap-12 m-2 mx-8">
+        {products.map((product, index) => (
         <div key={product.id} product={product}
-             className="flex flex-col items-center bg-slate-300 shadow-lg rounded-lg m-4 p-4"
+             className="flex flex-col items-start bg-white shadow-lg m-1 p-4"
              onClick={() => {navigate(`${product.id}`)}}
-        >
+        >   
+            <img className="w-60 h-60 object-cover"
+            src={imageUrls[index]}></img>
             <p>{product.name}</p>
-            <p>{product.price}</p>
-            <p>in stock: {product.quantity}</p>
-            <Button text="Add to cart" />
+            <p className="text-blue-950"
+            >Rs. {product.price}</p>
+            <p>In stock: {product.quantity}</p>
         </div>
       ))}
     </div>
