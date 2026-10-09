@@ -3,6 +3,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import api from "../api/axios";
 
 import Button from "./Button";
+import Cart from "./Cart";
 
 function Product() {
     const [product, setProduct] = useState(null);
@@ -10,6 +11,8 @@ function Product() {
     const [isEditing, setIsEditing] = useState(false);
     const [isOpenDelete, setIsOpenDelete] = useState(false);
     const [imageUrl, setImageUrl] = useState("");
+    const [quantity, setQuantity] = useState(1);
+    const [isOpenCart, setIsOpenCart] = useState(false);
 
     const { id } = useParams();
     let navigate = useNavigate();
@@ -22,6 +25,16 @@ function Product() {
     const getImage = async () => {
         const response = await api.get(`/images/${product.name}`)
         setImageUrl(response.data)
+    }
+
+    const addToCart = async () => {
+        const response = await api.post("/cart", 
+           {
+            id: parseInt(product.id),
+            quantity: parseInt(quantity)
+           }
+        );
+        setIsOpenCart(true);
     }
 
     useEffect(() => {
@@ -58,12 +71,12 @@ function Product() {
     }
 
     return(
-        <div className="flex justify-center items-center min-h-screen">
-            <div className="flex flex-col justify-center items-end bg-slate-300 rounded border border-0 p-2" key={product.id}>
+        <div className="flex items-center justify-end bg-gray-100 min-h-screen">
+            <div className="flex flex-col justify-center bg-white items-end px-8 pb-16 m-16 shadow-lg fixed left-0 top-0" key={product.id}>
 
                 {!isOpenDelete &&
                     <div className="relative">
-                        <button className="text-2xl p-1"
+                        <button className="text-3xl p-4"
                         onClick={() => {setIsOpenMenu(!isOpenMenu)}}> ⋮ </button>
                         {isOpenMenu && 
                             <div className="flex flex-col items-start border p-2 absolute bg-white">
@@ -95,22 +108,24 @@ function Product() {
                     </dialog>
                 )}
                     
-                <div className="flex flex-col p-2"
+                <div className="flex p-4"
                 onClick={() => {
                         setIsOpenMenu(false)
                         setIsOpenDelete(false)
                         setIsEditing(false)
                     }}>
                     {imageUrl&&
-                    <img src={imageUrl}></img>
+                    <img className="w-100 h-80 object-cover"
+                    src={imageUrl}></img>
                     }
+                    <div className="flex flex-col p-4 pl-8 pb-0">
                     <input className="focus:outline-none focus:ring-0 p-1"
                     value={product.name} onClick={(e) => {e.stopPropagation(); setIsEditing(true);}}
                     onChange={(e) => {setProduct({...product, name: e.target.value})}}></input>
                     <input className="focus:outline-none focus:ring-0 p-1"
                     value={product.price} onClick={(e) => {e.stopPropagation(); setIsEditing(true);}}
                     onChange={(e) => {setProduct({...product, price: e.target.value})}}></input>
-                    <input className="focus:outline-none focus:ring-0 p-1"
+                    <input className="focus:outline-none focus:ring-0 p-1 mb-auto"
                     value={product.quantity} onClick={(e) => {e.stopPropagation(); setIsEditing(true);}}
                     onChange={(e) => {setProduct({...product, quantity: e.target.value})}}></input>
                     {isEditing&&
@@ -120,10 +135,31 @@ function Product() {
                     </div>
                     }     
                     {!isEditing&& 
-                    <Button text="Add to cart" />
-                    }  
+                    <div className="flex flex-col justify-center">
+                    <div className="flex justify-center">
+                        <Button
+                        text="-" 
+                        onClick={() => {
+                            if (quantity > 1) {
+                                setQuantity(quantity - 1)
+                            }   
+                        }}/>
+                        <Button text={quantity}/>
+                        <Button text="+" onClick={() => {
+                            if (quantity < product.quantity){
+                                setQuantity(quantity + 1)
+                            }
+                        }}/>
                     </div>
+                    <Button text="Add to cart" onClick={(e) => {e.stopPropagation(); addToCart()}} />
+                    </div>
+                    }
+                    </div>  
+                </div>
             </div>
+            {isOpenCart&&
+            <Cart setIsOpenCart={setIsOpenCart} />
+    }
         </div>
     )  
 }
