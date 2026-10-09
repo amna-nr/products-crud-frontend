@@ -30,15 +30,11 @@ function Products () {
     }, [products])
 
     return (
-        <div className=" ">
+        <div className="py-20 bg-gray-100 relative">
         <Navbar />
-        <button className="flex mx-auto text-3xl bg-gray-200 text-gray-600 rounded border  px-32 mt-6"
-        onClick={() => {navigate("/products/create")}}>
-            +
-        </button>
         <div className="grid grid-cols-4 gap-12 m-2 mx-8">
         {products.map((product, index) => (
-        <div key={product.id} product={product}
+        <div key={product.id}
              className="flex flex-col items-start bg-white shadow-lg m-1 p-4"
              onClick={() => {navigate(`${product.id}`)}}
         >   
