@@ -43,7 +43,7 @@ function Products () {
             <p>{product.name}</p>
             <p className="text-blue-950"
             >Rs. {product.price}</p>
-            <p>In stock: {product.quantity}</p>
+            <p>In stock: {product.stock_quantity}</p>
         </div>
       ))}
     </div>

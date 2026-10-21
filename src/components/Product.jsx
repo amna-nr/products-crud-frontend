@@ -13,13 +13,15 @@ function Product() {
     const [imageUrl, setImageUrl] = useState("");
     const [quantity, setQuantity] = useState(1);
     const [isOpenCart, setIsOpenCart] = useState(false);
+    const [editedProduct, setEditedProduct] = useState(null)
 
     const { id } = useParams();
     let navigate = useNavigate();
 
     const getProduct = async() => {
         const response =  await api.get(`/products/${id}`)
-        setProduct(response.data) 
+        setProduct(response.data)
+        setEditedProduct(response.data)
     }
 
     const getImage = async () => {
@@ -35,6 +37,8 @@ function Product() {
            }
         );
         setIsOpenCart(true);
+        getProduct();
+        setQuantity(1);
     }
 
     useEffect(() => {
@@ -56,9 +60,9 @@ function Product() {
         e.preventDefault()
         const response = await api.put(`/products/${id}`,
             {
-                name: product.name,
-                price: parseInt(product.price, 10),
-                quantity: parseInt(product.quantity, 10)
+                name: editedProduct.name,
+                price: parseInt(editedProduct.price, 10),
+                stock_quantity: parseInt(editedProduct.stock_quantity, 10)
             }
         )
         setProduct(response.data)
@@ -120,21 +124,26 @@ function Product() {
                     }
                     <div className="flex flex-col p-4 pl-8 pb-0">
                     <input className="focus:outline-none focus:ring-0 p-1"
-                    value={product.name} onClick={(e) => {e.stopPropagation(); setIsEditing(true);}}
-                    onChange={(e) => {setProduct({...product, name: e.target.value})}}></input>
+                    value={editedProduct.name} onClick={(e) => {e.stopPropagation(); setIsEditing(true);}}
+                    onChange={(e) => {setEditedProduct({...editedProduct, name: e.target.value})}}></input>
                     <input className="focus:outline-none focus:ring-0 p-1"
-                    value={product.price} onClick={(e) => {e.stopPropagation(); setIsEditing(true);}}
-                    onChange={(e) => {setProduct({...product, price: e.target.value})}}></input>
+                    value={editedProduct.price} onClick={(e) => {e.stopPropagation(); setIsEditing(true);}}
+                    onChange={(e) => {setEditedProduct({...editedProduct, price: e.target.value})}}></input>
                     <input className="focus:outline-none focus:ring-0 p-1 mb-auto"
-                    value={product.quantity} onClick={(e) => {e.stopPropagation(); setIsEditing(true);}}
-                    onChange={(e) => {setProduct({...product, quantity: e.target.value})}}></input>
+                        value={editedProduct.stock_quantity} onClick={(e) => {e.stopPropagation(); setIsEditing(true);}}
+                        onChange={(e) => {setEditedProduct({...editedProduct, stock_quantity: e.target.value})}}></input>
+                    {product.stock_quantity == 0&& (
+                        <p className="text-red-600 mx-auto p-8"
+                        >Out of stock</p>
+                    )}
+            
                     {isEditing&&
                     <div className="flex justify-around">
-                        <Button text="Cancel" onClick={() => {setIsEditing(false)}} />
+                        <Button text="Cancel" onClick={() => {setIsEditing(false); getProduct();}} />
                         <Button text="Save" onClick={updateProduct} type="submit"/>
                     </div>
                     }     
-                    {!isEditing&& 
+                    {!isEditing&& product.stock_quantity > 0 &&
                     <div className="flex flex-col justify-center">
                     <div className="flex justify-center">
                         <Button
@@ -146,12 +155,16 @@ function Product() {
                         }}/>
                         <Button text={quantity}/>
                         <Button text="+" onClick={() => {
-                            if (quantity < product.quantity){
+                            if (quantity < product.stock_quantity){
                                 setQuantity(quantity + 1)
                             }
                         }}/>
                     </div>
-                    <Button text="Add to cart" onClick={(e) => {e.stopPropagation(); addToCart()}} />
+                    <Button text="Add to cart" 
+                    onClick={(e) => {
+                        e.stopPropagation();
+                        addToCart();
+                    }} />
                     </div>
                     }
                     </div>  

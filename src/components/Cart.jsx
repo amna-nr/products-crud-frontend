@@ -1,10 +1,13 @@
 import api from "../api/axios";
 import { useEffect, useState } from "react";
 import Button from "./Button";
+import { Navigate, useNavigate } from "react-router-dom";
 
 function Cart({setIsOpenCart}) {
     const [cart, setCart] = useState([])
     const [imageUrls, setImageUrls] = useState([])
+
+    let navigate = useNavigate();
     const getCart = async () => {
         const response = await api.get("/cart")
         setCart(response.data)
@@ -15,6 +18,14 @@ function Cart({setIsOpenCart}) {
            }))
         setImageUrls(imageUrls)
         }
+
+    const updateCartProduct = async(product_id, product_quantity) => {
+        await api.put("/cart", {
+                id: product_id,
+                quantity: product_quantity
+        });
+        getCart();
+    }
 
     const removeFromCart = async (product_id) => {
         await api.delete(`/cart/${product_id}`)
@@ -36,16 +47,34 @@ function Cart({setIsOpenCart}) {
             >Your cart is empty</p>
         ) : (
         cart.map((cartItem, index) => (
-            <div className="p-4 mx-8 m-2 bg-white shadow-xl"
+            <div className="p-4 mx-8 m-2 bg-white shadow-xl ml-12"
+            onClick={() => {navigate(`/products/${cartItem.product.id}`)}}
             key={cartItem.product.id}>
                 <img className="w-50 h-50 object-cover"
                 src={imageUrls[index]}></img>
+                <div className="py-2">
                 <p>{cartItem.product.name}</p>
                 <p>{cartItem.product.price}</p>
-                <p>In stock: {cartItem.product.quantity}</p> 
-                <p>{cartItem.quantity}</p>
+                <p>In stock: {cartItem.product.stock_quantity}</p> 
+                </div>
+                <div className="flex justify-center">
+                    <Button
+                    text="-" 
+                    onClick={(e) => {
+                        e.stopPropagation();
+                        updateCartProduct(cartItem.product.id, cartItem.quantity - 1); 
+                    }}/>
+                    <p className="p-4"
+                    >{cartItem.quantity}</p>
+                    <Button text="+" onClick={(e) => {
+                        e.stopPropagation();
+                        updateCartProduct(cartItem.product.id, cartItem.quantity + 1);
+                    }}/>
+                </div>
                 <Button text="Remove from cart" className="p-3 px-4 m-1 mx-auto block" 
-                onClick={() => {removeFromCart(cartItem.product.id)}} />
+                onClick={(e) => {
+                    e.stopPropagation();
+                    removeFromCart(cartItem.product.id);}} />
             </div>
         ))
         )}
