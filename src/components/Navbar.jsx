@@ -3,14 +3,20 @@ import api from '../api/axios'
 import Button from "./Button";
 import { useState } from "react";
 import Cart from "./Cart";
+import ErrorDialog from "./ErrorDialog";
 
 function Navbar (){
     let navigate = useNavigate()
     const [isOpenCart, setIsOpenCart] = useState(false)
+    const [error, setError] = useState("")
 
     const logoutUser = async () => {
-        const response = await api.post("/auth/logout", {})
+        try {
+        await api.post("/auth/logout", {})
         navigate("/login")
+        } catch (err) {
+            setError(err.response.data.detail)
+        }
     }
 
     return (
@@ -22,8 +28,11 @@ function Navbar (){
             <Button text="Logout" onClick={logoutUser} />
             </div>
         </nav>
-         {isOpenCart&&
+        {isOpenCart&&
             <Cart setIsOpenCart={setIsOpenCart} />
+        }
+        {error && 
+            <ErrorDialog error={error} onClose={() => {setError("")}} className="mt-40"/>
         }
         </>
     )

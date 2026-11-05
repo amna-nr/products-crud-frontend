@@ -12,6 +12,7 @@ function Cart({setIsOpenCart}) {
     const [error, setError] = useState("");
     const [accessError, setAccessError] = useState("");
     const [editedQuantityId, setEditedQuantityId] = useState("");
+    const [checkoutError, setCheckoutError] = useState("")
 
     let navigate = useNavigate();
     const getCart = async () => {
@@ -61,6 +62,7 @@ function Cart({setIsOpenCart}) {
         try {
             await api.put(`/cart/${product_id}`)
             await getCart()
+            setCheckoutError("")
         } catch (err) {
             setError(err.response.data.detail);
             setEditedQuantityId(product_id);
@@ -72,7 +74,7 @@ function Cart({setIsOpenCart}) {
             const response = await api.post("/payment/create-payment-session");
             window.location.href = response.data;
         } catch (err) {
-            setAccessError(err.response.data.detail)
+            setCheckoutError(err.response.data.detail)
         }
     }
 
@@ -137,8 +139,13 @@ function Cart({setIsOpenCart}) {
             </div>
             </div>
         )) )}
+        {checkoutError && 
+        <div className="flex justify center pt-4 ml-20 ">
+            <p className="text-red-600">{checkoutError}</p>
+        </div>       
+        }
         {cart.length != 0 && !loading && !accessError &&
-        <Button text="Checkout" className="mx-auto my-8 shadow-xl" onClick={checkout}/>
+        <Button text="Checkout" className="mx-auto mb-8 mt-4 shadow-xl" onClick={checkout}/>
         }
         </div>
     )

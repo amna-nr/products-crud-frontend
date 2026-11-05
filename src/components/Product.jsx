@@ -4,6 +4,7 @@ import api from "../api/axios";
 
 import Button from "./Button";
 import Cart from "./Cart";
+import ErrorDialog from "./ErrorDialog";
 
 function Product() {
     const [product, setProduct] = useState(null);
@@ -15,30 +16,45 @@ function Product() {
     const [isOpenCart, setIsOpenCart] = useState(false);
     const [editedProduct, setEditedProduct] = useState(null)
 
+    const [error, setError] = useState("")
+
     const { id } = useParams();
     let navigate = useNavigate();
 
     const getProduct = async() => {
-        const response =  await api.get(`/products/${id}`)
-        setProduct(response.data)
-        setEditedProduct(response.data)
+        try {
+            const response =  await api.get(`/products/${id}`)
+            setProduct(response.data)
+            setEditedProduct(response.data)
+        } catch (err) {
+            setError(err.response.data.detail)
+        }
     }
 
     const getImage = async () => {
-        const response = await api.get(`/images/${product.name}`)
-        setImageUrl(response.data)
+        try {
+            const response = await api.get(`/images/${product.name}`)
+            setImageUrl(response.data)
+        } catch (err) {
+            setError(err.response.data.detail)
+        }
     }
 
     const addToCart = async () => {
-        const response = await api.post("/cart", 
-           {
-            id: parseInt(product.id),
-            quantity: parseInt(quantity)
-           }
-        );
-        setIsOpenCart(true);
-        getProduct();
-        setQuantity(1);
+        try {
+            const response = await api.post("/cart", 
+                {
+                    id: parseInt(product.id),
+                    quantity: parseInt(quantity)
+                }
+            );
+            setIsOpenCart(true);
+            getProduct();
+            setQuantity(1);
+        } catch (err) {
+            setError(err.response.data.detail)
+        }
+        
     }
 
     useEffect(() => {
@@ -57,36 +73,45 @@ function Product() {
     }
     
     const updateProduct = async(e) => {
-        e.preventDefault()
-        const response = await api.put(`/products/${id}`,
-            {
-                name: editedProduct.name,
-                price: parseInt(editedProduct.price, 10),
-                stock_quantity: parseInt(editedProduct.stock_quantity, 10)
-            }
-        )
-        setProduct(response.data)
-        setIsEditing(!isEditing)
+        try {
+            e.preventDefault()
+            const response = await api.put(`/products/${id}`,
+                {
+                    name: editedProduct.name,
+                    price: parseInt(editedProduct.price, 10),
+                    stock_quantity: parseInt(editedProduct.stock_quantity, 10)
+                }
+            )
+            setProduct(response.data)
+            setIsEditing(!isEditing)
+        } catch (error) {
+            setError(error.response.data.detail)
+        }
     }
 
     const deleteProduct = async () => {
-        const response = await api.delete(`/products/${id}`)
-        navigate("/products")
+        try {
+            const response = await api.delete(`/products/${id}`)
+            navigate("/products")
+        }
+        catch (error) {
+            setError(error.response.data.detail)
+        }
     }
 
     return(
         <div className="flex items-center justify-end bg-gray-100 min-h-screen">
             <div className="flex flex-col justify-center bg-white items-end px-8 pb-16 m-16 shadow-lg fixed left-0 top-0" key={product.id}>
-
+                {error &&
+                <ErrorDialog error={error} onClose={() => {setError("")}}/>
+                }
                 {!isOpenDelete &&
                     <div className="relative">
                         <button className="text-3xl p-4"
                         onClick={() => {setIsOpenMenu(!isOpenMenu)}}> ⋮ </button>
                         {isOpenMenu && 
-                            <div className="flex flex-col items-start border p-2 absolute bg-white">
-                                <button onClick={() => {setIsOpenDelete(!isOpenDelete)}}> 
-                                    Delete 
-                                </button>
+                            <div className="flex flex-col items-start p-0 absolute">
+                                <Button text="Delete" onClick={() => {setIsOpenDelete(!isOpenDelete)}} />
                             </div>
                         }
                     </div>
@@ -95,19 +120,13 @@ function Product() {
                 {isOpenDelete &&
                 (
                     <dialog open
-                    className="flex flex-col rounded border p-2 gap-2 mx-auto">
-                        <p> 
+                    className="flex flex-col rounded border border-0 shadow-2xl p-4 gap-2 mx-auto">
+                        <p className="p-4"> 
                             Delete {product.name} from products? 
                         </p>
                         <div className="flex justify-center">
-                            <button className="bg-blue-200 rounded border p-2 m-1"
-                            onClick={() => {setIsOpenDelete(!isOpenDelete)}}>
-                                Cancel 
-                            </button>
-                            <button className="bg-red-400 rounded border p-2 m-1"
-                            onClick={deleteProduct}> 
-                                Okay 
-                            </button>
+                            <Button text="Cancel" onClick={() => {setIsOpenDelete(!isOpenDelete)}} />
+                            <Button text="Okay" onClick={deleteProduct} />
                         </div>
                     </dialog>
                 )}
@@ -135,8 +154,7 @@ function Product() {
                     {product.stock_quantity == 0&& (
                         <p className="text-red-600 mx-auto p-8"
                         >Out of stock</p>
-                    )}
-            
+                    )}     
                     {isEditing&&
                     <div className="flex justify-around">
                         <Button text="Cancel" onClick={() => {setIsEditing(false); getProduct();}} />

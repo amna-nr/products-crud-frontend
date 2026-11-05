@@ -8,21 +8,26 @@ import Input from "./Input.jsx";
 function LoginForm() {
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
+    const [error, setError] = useState("")
 
     let navigate = useNavigate();
 
     const loginUser = async (e) => {
-        e.preventDefault()
-        const response = await api.post("/auth/login",
-            {
-                email: email,
-                password: password
-            }
-        )
-        setEmail("")
-        setPassword("")
+        try {
+            e.preventDefault()
+            await api.post("/auth/login",
+                {
+                    email: email,
+                    password: password
+                }
+            )
+            setEmail("")
+            setPassword("")
 
-        navigate("/products")
+            navigate("/products")
+        } catch (err) {
+            setError(err.response.data.detail)
+        }
 
     }
 
@@ -34,6 +39,8 @@ function LoginForm() {
                 <Input placeholder="Password" value={password} onChange={e => {setPassword(e.target.value)}} />
                 <Button text="Login" type="submit"/>
             </form>
+            {error && 
+            <p className="text-red-600">{error}</p>}
             <p className="p-4">
                 Don't have an account? Register <Link className="text-indigo-600" to="/register">Here</Link>
             </p>
