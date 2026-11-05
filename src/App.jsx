@@ -5,6 +5,7 @@ import Products from './components/Products';
 import Product from './components/Product';
 import ProductCreate from './components/ProductCreate';
 import Home from './pages/Home';
+import PaymentSuccess from './components/PaymentSuccess';
 
 
 function App() {
@@ -17,6 +18,7 @@ function App() {
       <Route path="/products" element={<Products />} />
       <Route path="/products/:id" element={<Product />} />
       <Route path="/products/create" element={<ProductCreate />} />
+      <Route path="/payment-success" element={<PaymentSuccess />} />
     </Routes>
   </BrowserRouter>
   );
