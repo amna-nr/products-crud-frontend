@@ -6,19 +6,28 @@ import Navbar from "./Navbar";
 function Products () {
     const [products, setProducts] = useState([]);
     const [imageUrls, setImageUrls] = useState([])
+    const [error, setError] = useState("")
     const navigate = useNavigate()
 
     async function getProducts() {
-        const response = await api.get("/products/");
-        setProducts(response.data);
+        try {
+            const response = await api.get("/products/");
+            setProducts(response.data);
+        } catch (err) {
+            setError(err.response.data.detail)
+        }
     }
 
     const getImageUrls = async () => {
-        const images = await Promise.all(products.map(async (product) => {
-            const response = await api.get(`/images/${product.name}`)
-            return response.data
-        }))
-    setImageUrls(images)
+        try {
+            const images = await Promise.all(products.map(async (product) => {
+                const response = await api.get(`/images/${product.name}`)
+                return response.data
+            }))
+            setImageUrls(images)
+        } catch (err) {
+            setError(err.response.data.detail)
+        }
     }
 
     useEffect(() => {
@@ -30,24 +39,34 @@ function Products () {
     }, [products])
 
     return (
-        <div className=" ">
+        <div className="py-13 bg-gray-100 relative">
         <Navbar />
-        <button className="flex mx-auto text-3xl bg-gray-200 text-gray-600 rounded border  px-32 mt-6"
-        onClick={() => {navigate("/products/create")}}>
-            +
-        </button>
-        <div className="grid grid-cols-4 gap-12 m-2 mx-8">
+        {error &&
+            <ErrorDialog error={error} onClose={() => {setError("")}}/>
+        }
+        <div className="grid grid-cols-4 gap-2">
         {products.map((product, index) => (
-        <div key={product.id} product={product}
-             className="flex flex-col items-start bg-white shadow-lg m-1 p-4"
+        <div key={product.id}
+             className="flex flex-col items-start bg-white shadow-2xl m-1 rounded-xl border border-0"
              onClick={() => {navigate(`${product.id}`)}}
         >   
-            <img className="w-60 h-60 object-cover"
+            <img className="w-full h-60 object-cover rounded-xl border border-0"
             src={imageUrls[index]}></img>
+            <div className="p-4">
             <p>{product.name}</p>
             <p className="text-blue-950"
             >Rs. {product.price}</p>
-            <p>In stock: {product.quantity}</p>
+            {product.stock_quantity == 0 ? ( 
+                <p className="text-red-600">
+                    Out of stock
+                </p>
+                ) : (
+                <p className="text-green-700">
+                In stock: {product.stock_quantity}
+                </p>
+                )
+            }
+            </div>
         </div>
       ))}
     </div>

@@ -1,22 +1,40 @@
 import { Link, useNavigate } from "react-router-dom";
 import api from '../api/axios'
+import Button from "./Button";
+import { useState } from "react";
+import Cart from "./Cart";
+import ErrorDialog from "./ErrorDialog";
 
 function Navbar (){
     let navigate = useNavigate()
+    const [isOpenCart, setIsOpenCart] = useState(false)
+    const [error, setError] = useState("")
 
-    const logoutUser = async (e) => {
-        e.preventDefault()
-        const response = await api.post("/auth/logout", {})
-
+    const logoutUser = async () => {
+        try {
+        await api.post("/auth/logout", {})
         navigate("/login")
+        } catch (err) {
+            setError(err.response.data.detail)
+        }
     }
 
     return (
-        <nav className="flex justify-end p-2 pr-4 bg-blue-950">
-            <button className="text-white p-2"
-            onClick={logoutUser}
-            type="submit">Logout</button>
+        <>
+        <nav className="fixed top-0 flex justify-between items-center bg-blue-950 min-w-screen">
+            <Button text="✛" onClick={() => {navigate("/products/create")}} />
+            <div className="px-2">
+            <Button text="Cart" onClick={() => {setIsOpenCart(!isOpenCart)}}/>
+            <Button text="Logout" onClick={logoutUser} />
+            </div>
         </nav>
+        {isOpenCart&&
+            <Cart setIsOpenCart={setIsOpenCart} />
+        }
+        {error && 
+            <ErrorDialog error={error} onClose={() => {setError("")}} className="mt-50"/>
+        }
+        </>
     )
 }
 
