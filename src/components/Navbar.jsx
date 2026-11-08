@@ -21,7 +21,7 @@ function Navbar (){
 
     return (
         <>
-        <nav className="fixed top-0 flex justify-between bg-blue-950 min-w-screen">
+        <nav className="fixed top-0 flex justify-between items-center bg-blue-950 min-w-screen">
             <Button text="✛" onClick={() => {navigate("/products/create")}} />
             <div className="px-2">
             <Button text="Cart" onClick={() => {setIsOpenCart(!isOpenCart)}}/>
@@ -32,7 +32,7 @@ function Navbar (){
             <Cart setIsOpenCart={setIsOpenCart} />
         }
         {error && 
-            <ErrorDialog error={error} onClose={() => {setError("")}} className="mt-40"/>
+            <ErrorDialog error={error} onClose={() => {setError("")}} className="mt-50"/>
         }
         </>
     )

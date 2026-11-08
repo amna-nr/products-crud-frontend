@@ -39,23 +39,34 @@ function Products () {
     }, [products])
 
     return (
-        <div className="py-20 bg-gray-100 relative">
+        <div className="py-13 bg-gray-100 relative">
         <Navbar />
         {error &&
             <ErrorDialog error={error} onClose={() => {setError("")}}/>
         }
-        <div className="grid grid-cols-4 gap-12 m-2 mx-8">
+        <div className="grid grid-cols-4 gap-2">
         {products.map((product, index) => (
         <div key={product.id}
-             className="flex flex-col items-start bg-white shadow-2xl m-1 p-4"
+             className="flex flex-col items-start bg-white shadow-2xl m-1 rounded-xl border border-0"
              onClick={() => {navigate(`${product.id}`)}}
         >   
-            <img className="w-60 h-60 object-cover"
+            <img className="w-full h-60 object-cover rounded-xl border border-0"
             src={imageUrls[index]}></img>
+            <div className="p-4">
             <p>{product.name}</p>
             <p className="text-blue-950"
             >Rs. {product.price}</p>
-            <p>In stock: {product.stock_quantity}</p>
+            {product.stock_quantity == 0 ? ( 
+                <p className="text-red-600">
+                    Out of stock
+                </p>
+                ) : (
+                <p className="text-green-700">
+                In stock: {product.stock_quantity}
+                </p>
+                )
+            }
+            </div>
         </div>
       ))}
     </div>

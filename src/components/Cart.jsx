@@ -83,27 +83,31 @@ function Cart({setIsOpenCart}) {
     }, [])
 
     return (
-        <div className="fixed top-0 right-0 flex flex-col bg-gray-50 items-start shadow-lg h-screen ml-auto overflow-y-auto w-84">
-        <button className="bg-blue-950 text-white p-2 px-4 rounded border m-4"
-        onClick={() => {setIsOpenCart(false)}}>
-            X
-        </button>
+        <div className="fixed top-0 right-0 flex flex-col bg-gray-50 items-start shadow-lg h-screen overflow-y-auto mr-0 p-4">
+        <Button text="X" onClick={() => {setIsOpenCart(false)}}/>
         {loading? (
-        <p className="mx-auto my-8">Loading your cart...</p>
+        <div className="flex justify-center">
+            <p className="my-8 w-68">Loading your cart...</p>
+        </div>
         ) : 
         accessError? (
-        <p className="text-red-600 mx-24 my-40">{accessError}</p>
+        <div className="flex justify-center items-center w-68 min-h-screen">
+            <p className="text-red-600">{accessError}</p>
+        </div>
         ) :
         cart.length === 0 ?(
-            <p className="mx-auto my-8"
-            >Your cart is empty</p>
+        <div className="flex justify-center">
+            <p className="my-8 w-68">
+                Your cart is empty
+            </p>
+        </div>     
         ) :
         (
         cart.map((cartItem, index) => (
             <div className="flex items-start" key={cartItem.product.id}>
-            <input type="checkbox" className="ml-4 mt-6 h-5 w-5 cursor-pointer rounded"
+            <input type="checkbox" className="mr-0 mt-6 h-5 w-5 cursor-pointer rounded"
             onChange={() => {selectCartProduct(cartItem.product.id)}} checked={cartItem.is_selected} ></input>
-            <div className="p-4 mx-6 m-2 bg-white shadow-xl"
+            <div className="p-4 ml-4 m-2 bg-white shadow-xl"
             onClick={() => {navigate(`/products/${cartItem.product.id}`)}}
             key={cartItem.product.id}>
                 <img className="w-50 h-50 object-cover"
@@ -113,7 +117,7 @@ function Cart({setIsOpenCart}) {
                 <p>{cartItem.product.price}</p>
                 <p>In stock: {cartItem.product.stock_quantity}</p> 
                 </div>
-                <div className="flex justify-center">
+                <div className="flex justify-center items-center">
                     <Button
                     text="-" 
                     onClick={(e) => {
@@ -129,10 +133,10 @@ function Cart({setIsOpenCart}) {
                 </div>
                 {error && editedQuantityId === cartItem.product.id && 
                 <div className="flex justify-center">
-                    <p className="text-red-600 text-xs">{error}</p>
+                    <p className="text-red-600 text-xs pb-2">{error}</p>
                 </div>
                 }
-                <Button text="Remove from cart" className="p-3 px-4 m-1 mx-auto block" 
+                <Button text="Remove from cart" className="m-1 mx-auto block" 
                 onClick={(e) => {
                     e.stopPropagation();
                     removeFromCart(cartItem.product.id);}} />
@@ -145,7 +149,7 @@ function Cart({setIsOpenCart}) {
         </div>       
         }
         {cart.length != 0 && !loading && !accessError &&
-        <Button text="Checkout" className="mx-auto mb-8 mt-4 shadow-xl" onClick={checkout}/>
+        <Button text="Checkout" className="mb-8 mt-4 ml-24 shadow-xl" onClick={checkout}/>
         }
         </div>
     )
